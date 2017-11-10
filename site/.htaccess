@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteRule ^$ /src/index.php
+RewriteRule ^([^/]*\.php)$ /src/$1 [L]

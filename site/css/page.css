@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    color: #333333;
+    font-family: Tahoma;
+}
+
+input {
+    padding: 5px;
+}
+
+.block {
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.box {
+    background: lightgray;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 3px;
+}
+
+#login {
+    text-align: center;
+    width:25%;
+    min-width: 200px;
+    margin: auto;
+}
