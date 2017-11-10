@@ -1,3 +1,5 @@
 RewriteEngine on
-RewriteRule ^$ /src/index.php
+RewriteRule ^$ /src/index.php [L]
 RewriteRule ^([^/]*\.php)$ /src/$1 [L]
+
+RedirectMatch 403 ^/config/.*$

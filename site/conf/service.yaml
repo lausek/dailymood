@@ -1,0 +1,8 @@
+# Pepper for password hashing
+pepper: ""
+
+# Connection to mysql database
+database:
+	host: ""
+	user: ""
+	password: ""
