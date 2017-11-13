@@ -10,7 +10,7 @@ class View {
     private $twig;
 
     public function __construct() {
-        $loader = new Twig_Loader_Filesystem('../temp');
+        $loader = new Twig_Loader_Filesystem('../template');
         $this->twig = new Twig_Environment($loader, [
             //'cache' => '../cache',
         ]);

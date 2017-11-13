@@ -1,0 +1,3 @@
+[submodule "site/src/spyc"]
+	path = site/src/spyc
+	url = https://github.com/lausek/spyc.git
