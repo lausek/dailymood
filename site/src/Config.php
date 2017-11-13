@@ -8,7 +8,7 @@ class Config {
 	private static $obj = null;
 	
 	private static function init() {
-		$obj = Spyc::YAMLLoad(self::PATH_CONFIG_SERVICE);
+		self::$obj = Spyc::YAMLLoad(self::PATH_CONFIG_SERVICE);
 		self::$initialized = true;
 	}
 	
