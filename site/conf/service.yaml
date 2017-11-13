@@ -4,5 +4,6 @@ pepper: ""
 # Connection to mysql database
 database:
 	host: ""
+	name: ""
 	user: ""
 	password: ""
