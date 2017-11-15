@@ -1,13 +1,27 @@
 (function () {
 	
-	var SERVICE_SET_DAY = "/src/background/set_day.php"
+	var SERVICE_SET_DAY = "/src/background/set_day.php";
 	
-	function call_service(url, body, callback) {
+	function call_service(url, callback, body) {
+		var request = new XMLHttpRequest();
+		request.open("POST", url);
 		
+		if(body !== undefined) {
+			for(var key in body) {
+				request.setReguestHeader(key, body[key]);
+			}
+		}
+		
+		request.addEventListener('load', function() {
+			callback(request);
+		});
+		request.send();
 	}
 	
 	function choose_callback(event) {
-		console.log(sender, "click");
+		call_service(SERVICE_SET_DAY, function(request) {
+			
+		});
 	}
 	
 	document.addEventListener('DOMContentLoaded', function() {
