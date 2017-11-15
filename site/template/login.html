@@ -2,6 +2,12 @@
 
 {% block main %}
 
+	{% if env.statuscode == '401' %}
+		<div id="login-msg" class="box block">
+			Login credentials incorrect!
+		</div>
+	{% endif %}
+
     <div id="login" class="box">
         <form action="" method="POST">
             <input name="username" class="block" type="text" placeholder="user...">
