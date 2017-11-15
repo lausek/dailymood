@@ -4,6 +4,17 @@
 	<link  rel="stylesheet" type="text/css" href="css/content.css" />
 {% endblock %}
 
+{% macro print_days(days, moods, amount) %}
+	{% for i in 1..amount %}
+		{% set mood = days[i].mood-1 %}
+		{% if moods[mood] %}
+			<div class="day-box day-mood-{{ moods[mood].name }}"></div>
+		{% else %}
+			<div class="day-box"></div>
+		{% endif %}		
+	{% endfor %}
+{% endmacro %}
+
 {% block main %}
 
 	<main>
@@ -26,14 +37,12 @@
 		
 		<div id="last-week" class="box block">
 			<h1>Last 7 days...</h1>
-			{% for i in 0..6 %}
-				{% set day = vars.days[i] %}
-				<div class="day-box day-mood-{{ vars.moods[day.mood] }}"></div>
-			{% endfor %}
+			{{ _self.print_days(vars.days, vars.moods, 7) }}
 		</div>
 		
 		<div id="last-month" class="box block">
 			<h1>Last 30 days...</h1>
+			{{ _self.print_days(vars.days, vars.moods, 30) }}
 		</div>
 		
 	</main>

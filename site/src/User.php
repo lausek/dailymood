@@ -9,6 +9,10 @@ class User {
 		$this->username = $username;
 	}
 	
+	public function get_id() {
+		return $this->id;
+	}
+	
     public static function load() {
 
         session_start();
@@ -44,7 +48,7 @@ class User {
     }
     
     public function __sleep() {
-    	return ["username"];
+    	return ["id", "username"];
     }
     
 }

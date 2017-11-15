@@ -1,9 +1,26 @@
 .day-box {
 	height: 16px;
 	width: 16px;
-	background-color: red;	
+	background-color: gray;	
+	display: inline-block;
 }
 
-#last-week .day-box {
-	display: inline-block;
+.day-mood-sad {
+	background-color: blue;
+}
+
+.day-mood-angry {
+	background-color: red;
+}
+
+.day-mood-neutral {
+	background-color: orange;
+}
+
+.day-mood-happy {
+	background-color: green;
+}
+
+.day-mood-stressed {
+	background-color: yellow;
 }
