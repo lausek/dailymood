@@ -13,5 +13,23 @@ class DataActor {
 		}
 		return self::$pdo;
 	}
-
+	
+	public static function get_moods() {
+		
+		$stmt = self::get()->prepare("SELECT name, icon FROM moods");
+		
+		if(!$stmt->execute()) {
+			return [];
+		}
+		
+		return $stmt->fetchAll();
+		
+	}
+	
+	public static function get_days($user) {
+		
+		//TODO: load days of user
+		
+	}
+	
 }

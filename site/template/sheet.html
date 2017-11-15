@@ -1,5 +1,27 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block main %}
 
-{% block main %}
-Logged in
+<main>
+
+	<menu>
+		<a href="/src/background/logout.php">Logout</a>
+	</menu>
+	
+	<div id="choose-section" class="box block"> 
+		<h1>How did you feel today?</h1>
+		<div id="choose-buttons">
+			{% for mood in vars.moods %}
+				<div id="choose-{{ mood.name }}" class="choose-button">
+					<div class="choose-icon">&#{{ mood.icon }};</div>
+					<div class="choose-text">{{ mood.name }}</div>
+				</div>
+			{% endfor %}
+		</div> 
+	</div> 
+	
+	<div id="last-week" class="box block"></div>
+	
+	<div id="last-month" class="box block"></div>
+	
+</main>
+
 {% endblock %}
