@@ -2,8 +2,8 @@
 
 spl_autoload_register(function ($name) {
 	if(strpos($name, "Spyc") !== false) {
-		require("spyc/Spyc.php");	
+		require(dirname(__FILE__)."/spyc/Spyc.php");	
 	} elseif(strpos($name, "Twig") === false) {
-		require($name.".php");
+		require(dirname(__FILE__)."/$name.php");
 	} 
 });

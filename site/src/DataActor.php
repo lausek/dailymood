@@ -33,17 +33,6 @@ class DataActor {
 		$stmt->bindValue(2, (new DateTime)->sub(new DateInterval("P30D"))->format("Y-m-d"), PDO::PARAM_STR);
 		$stmt->bindValue(3, (new DateTime)->format("Y-m-d"), PDO::PARAM_STR);
 		
-		// nehme erstes datum
-			// wenn bdatum = null
-				// füge tag hinzu
-			// else
-				// wenn bdatum-1 == day["day"]
-					// füge tag hinzu
-				// else
-					// append_empty(bdatum-day["day"])
-			// bdatum = day["day"]
-		// append_empty(bdatum-day["day"])
-			
 		if(!$stmt->execute()) {
 			foreach($stmt->errorInfo() as $msg) {
 				echo $msg."<br>";

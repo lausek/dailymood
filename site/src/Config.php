@@ -1,14 +1,14 @@
 <?php
 
+define('PATH_CONFIG_SERVICE', dirname(__FILE__)."/../conf/service.yaml");
+
 class Config {
-    
-	const PATH_CONFIG_SERVICE = "../conf/service.yaml";
 	
 	private static $initialized = false;
 	private static $obj = null;
 	
 	private static function init() {
-		self::$obj = Spyc::YAMLLoad(self::PATH_CONFIG_SERVICE);
+		self::$obj = Spyc::YAMLLoad(PATH_CONFIG_SERVICE);
 		self::$initialized = true;
 	}
 	
