@@ -1,5 +1,6 @@
 # Pepper for password hashing
-pepper: ""
+# Set this once! Don't change afterwards!
+pepper: "5!yLZ;d:d"
 
 # Connection to mysql database
 database:
