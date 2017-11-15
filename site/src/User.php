@@ -24,7 +24,7 @@ class User {
         	$stmt->bindValue(2, $_POST["password"]);
         	$stmt->bindValue(3, Config::get("pepper"));
         	
-        	if(!$stmt->execute()) {
+        	if(!$stmt->execute() || $stmt->rowCount() === 0) {
         		http_response_code(401);
         		return null;
         	}
