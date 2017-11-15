@@ -5,22 +5,24 @@
 	display: inline-block;
 }
 
+/* Thanks to: http://www.color-hex.com/color-palette/49772 */
+
 .day-mood-sad {
-	background-color: blue;
+	background-color: #4cb3db;
 }
 
 .day-mood-angry {
-	background-color: red;
+	background-color: #ea5f5f;
 }
 
 .day-mood-neutral {
-	background-color: orange;
+	background-color: #695fd8;
 }
 
 .day-mood-happy {
-	background-color: green;
+	background-color: #5dd665;
 }
 
 .day-mood-stressed {
-	background-color: yellow;
+	background-color: #e6e74c;
 }
