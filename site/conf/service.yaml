@@ -4,7 +4,7 @@ pepper: "5!yLZ;d:d"
 
 # Connection to mysql database
 database:
-	host: ""
-	name: ""
-	user: ""
+	host: "localhost"
+	name: "dailymood"
+	user: "root"
 	password: ""

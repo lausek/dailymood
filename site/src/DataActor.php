@@ -28,7 +28,11 @@ class DataActor {
 	
 	public static function get_days($user) {
 		
-		//TODO: load days of user
+		$stmt = self::get()->prepare("SELECT * FROM days WHERE ");
+		
+		$days = $stmt->fetchAll();
+		
+		return $days;
 		
 	}
 	

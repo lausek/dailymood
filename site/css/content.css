@@ -1,0 +1,9 @@
+.day-box {
+	height: 16px;
+	width: 16px;
+	background-color: red;	
+}
+
+#last-week .day-box {
+	display: inline-block;
+}

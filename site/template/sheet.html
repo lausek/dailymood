@@ -1,27 +1,41 @@
-{% extends "base.html" %} {% block main %}
+{% extends "base.html" %} 
 
-<main>
+{% block resources %}
+	<link  rel="stylesheet" type="text/css" href="css/content.css" />
+{% endblock %}
 
-	<menu>
-		<a href="/src/background/logout.php">Logout</a>
-	</menu>
+{% block main %}
+
+	<main>
 	
-	<div id="choose-section" class="box block"> 
-		<h1>How did you feel today?</h1>
-		<div id="choose-buttons">
-			{% for mood in vars.moods %}
-				<div id="choose-{{ mood.name }}" class="choose-button">
-					<div class="choose-icon">&#{{ mood.icon }};</div>
-					<div class="choose-text">{{ mood.name }}</div>
-				</div>
-			{% endfor %}
+		<menu>
+			<a href="/src/background/logout.php">Logout</a>
+		</menu>
+		
+		<div id="choose-section" class="box block"> 
+			<h1>How did you feel today?</h1>
+			<div id="choose-buttons">
+				{% for mood in vars.moods %}
+					<div id="choose-{{ mood.name }}" class="choose-button">
+						<div class="choose-icon">&#{{ mood.icon }};</div>
+						<div class="choose-text">{{ mood.name }}</div>
+					</div>
+				{% endfor %}
+			</div> 
 		</div> 
-	</div> 
-	
-	<div id="last-week" class="box block"></div>
-	
-	<div id="last-month" class="box block"></div>
-	
-</main>
+		
+		<div id="last-week" class="box block">
+			<h1>Last 7 days...</h1>
+			{% for i in 0..6 %}
+				{% set day = vars.days[i] %}
+				<div class="day-box day-mood-{{ vars.moods[day.mood] }}"></div>
+			{% endfor %}
+		</div>
+		
+		<div id="last-month" class="box block">
+			<h1>Last 30 days...</h1>
+		</div>
+		
+	</main>
 
 {% endblock %}

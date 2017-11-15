@@ -28,3 +28,20 @@ input {
     min-width: 200px;
     margin: auto;
 }
+
+#choose-buttons,
+.choose-icon,
+.choose-text {
+	display: block;
+	text-align: center;
+}
+
+.choose-icon {
+	font-size: 40px;
+}
+
+.choose-button {
+	display: inline-block;
+	cursor: pointer;
+	padding: 10px;
+}
