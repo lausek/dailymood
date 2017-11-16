@@ -9,7 +9,12 @@ class DataActor {
 	public static function get() {
 		if(self::$pdo === null) {
 			$dbconf = Config::getImportant("database");
-			self::$pdo = new PDO("mysql:dbname=".$dbconf["name"].";host=".$dbconf["host"], $dbconf["user"], $dbconf["password"]);
+			if(isset($dbconf["unix_socket"])) {
+				self::$pdo = new PDO("mysql:unix_socket=".$dbconf["unix_socket"],$dbconf["user"], $dbconf["password"]);
+				self::$pdo->query("use {$dbconf['name']}");
+			} else {
+				self::$pdo = new PDO("mysql:dbname=".$dbconf["name"].";host=".$dbconf["host"], $dbconf["user"], $dbconf["password"]);
+			}
 		}
 		return self::$pdo;
 	}

@@ -1,5 +1,7 @@
 <?php
 
+error_reporting( E_ALL );
+
 class User {
 
 	private $id, $username;
@@ -52,3 +54,4 @@ class User {
     }
     
 }
+
