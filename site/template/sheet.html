@@ -9,10 +9,13 @@
 	{% for i in 1..amount %}
 		{% set mood = days[i].mood-1 %}
 		{% if moods[mood] %}
-			<div class="day-box day-mood-{{ moods[mood].name }}"></div>
+			<div class="day-box day-mood-{{ moods[mood].name }}">
 		{% else %}
-			<div class="day-box"></div>
+			<div class="day-box">
 		{% endif %}		
+
+			<span class="day-info" hidden>{ "date": "{{ days[i].day }}", "mood": "{{ mood }}" }</span>
+		</div>
 	{% endfor %}
 {% endmacro %}
 
@@ -21,11 +24,11 @@
 	<main>
 	
 		<menu>
-			<a href="/src/background/logout.php">Logout</a>
+			<a href="/background/logout.php">Logout</a>
 		</menu>
 		
 		<div id="choose-section" class="box block"> 
-			<h1>How did you feel today?</h1>
+			<h1>How did you feel <span id="choose-day">today</span>?</h1>
 			<div id="choose-buttons">
 				{% for mood in vars.moods %}
 					<div id="choose-{{ mood.name }}" class="choose-button">
