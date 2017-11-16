@@ -1,6 +1,7 @@
 .day-box {
 	height: 16px;
 	width: 16px;
+	cursor: pointer;
 	background-color: gray;	
 	display: inline-block;
 }
