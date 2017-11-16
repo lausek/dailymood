@@ -20,7 +20,9 @@
 	
 	function choose_callback(event) {
 		call_service(SERVICE_SET_DAY, function(request) {
-			
+			if(request.status === 200) {
+					
+			}
 		});
 	}
 	

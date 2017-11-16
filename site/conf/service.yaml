@@ -4,7 +4,10 @@ pepper: "5!yLZ;d:d"
 
 # Connection to mysql database
 database:
-	host: "localhost"
-	name: "dailymood"
-	user: "root"
-	password: ""
+        name: "dailymood"
+        user: "dailymood"
+        password: ""
+        # Unix:
+        unix_socket: "/var/run/mysqld/mysqld.sock"
+        # Remote:
+        host: "localhost"
