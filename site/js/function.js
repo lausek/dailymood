@@ -42,9 +42,15 @@
 		}; 
 
 		call_service(SERVICE_SET_DAY, function(request) {
-			console.log(request.responseText);
 			if(request.status === 200) {
-				alert("geändert");	
+				var classes = document.getElementById("day-focused").classList;
+				for(var i = 0; i < classes.length; i++) {
+					var cls = classes[i];
+					if(cls !== "day-box") {
+						classes.remove(cls);
+					}
+				}
+				classes.add("day-mood-"+params.mood);
 			}
 		}, params);
 
@@ -76,7 +82,13 @@
 	
 		if(info.mood !== -1) {
 		}
-			
+		
+		var previous = document.getElementById("day-focused");
+		if(previous) {
+			previous.id = "";
+		}
+		node.id = "day-focused";
+
 		chosen_date = get_date(info.date);
 		change_displayed_date();	
 
