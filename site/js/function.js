@@ -3,33 +3,46 @@
 	var SERVICE_SET_DAY = "/background/set_day.php";
 	var chosen_date = get_date();
 	
+	function join_params(obj) {
+		var str = "";
+		var i = 0;
+		for(var key in obj) {
+			str += (i?"&":"") + key+"="+encodeURI(obj[key]);
+			i++;
+		}
+		return str;
+	}
+
 	function format_date(date) {
-		return date.toISOString().split('T')[0];
+		return new Date(date.getTime() - (date.getTimezoneOffset()*60000)).toISOString().split('T')[0];
 	}
 
 	function call_service(url, callback, body) {
 		var request = new XMLHttpRequest();
-		request.open("POST", url);
+		request.open('POST', url, true);
 		
-		if(body !== undefined) {
-			for(var key in body) {
-				request.setRequestHeader(key, body[key]);
-			}
-		}
-		
+		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
 		request.addEventListener('load', function() {
 			callback(request);
 		});
-		request.send();
+		request.send(join_params(body));
 	}
 	
-	function choose_callback(event) {
-		
-		var params = {}; 
+	function choose_callback(evt) {
 	
-		params.date = chosen_date;
+		/* recursively get button element */
+		var button = (function that(node) {
+			return node.className.includes("choose-button") ? node : that(node.parentElement);
+		}(evt.target));
+
+		var params = {
+			ondate: format_date(chosen_date),
+			mood: button.getElementsByClassName("choose-text")[0].innerHTML,
+		}; 
 
 		call_service(SERVICE_SET_DAY, function(request) {
+			console.log(request.responseText);
 			if(request.status === 200) {
 				alert("geändert");	
 			}
@@ -47,7 +60,7 @@
 	
 		var token = "today";
 
-		// is selected date not today?
+		/* is selected date not today? */
 		if(chosen_date.valueOf() !== get_date().valueOf()) {
 			token = "on "+format_date(chosen_date);
 		}

@@ -59,7 +59,7 @@ class DataActor {
 			
 			if($lastDate === null
 			|| $lastDate->format("Y-m-d") != $expected->format("Y-m-d")) {
-				$days[$i] = null;
+				$days[$i] = ["day" => $expected->format("Y-m-d")];
 			}else{
 				$days[$i] = $row;
 				$row = $stmt->fetch(PDO::FETCH_ASSOC);
