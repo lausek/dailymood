@@ -1,6 +1,6 @@
 <?php
 
-define('PATH_CONFIG_SERVICE', dirname(__FILE__)."/../conf/service.yaml");
+define('PATH_CONFIG_SERVICE', dirname(__FILE__)."/../../conf/service.yaml");
 
 class Config {
 	

@@ -1,6 +1,6 @@
 <?php
 
-require("Autoloader.php");
+require("class/Autoloader.php");
 
 $user = User::load();
 
