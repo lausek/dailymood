@@ -4,6 +4,7 @@ body {
     font-family: Tahoma;
 }
 
+menu,
 input {
     padding: 5px;
 }
@@ -16,6 +17,7 @@ input {
 }
 
 .box,
+.toolbar-button,
 .choose-button {
 	margin-top: 10px;
 	margin-left: 10px;
@@ -24,6 +26,11 @@ input {
     padding: 10px;
     border: 1px solid #d6d4d4;
     border-radius: 3px;
+}
+
+.toolbar-button {
+   width: 32px;
+   height: 32px;
 }
 
 #login {
