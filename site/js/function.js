@@ -43,7 +43,14 @@
 
 		call_service(SERVICE_SET_DAY, function(request) {
 			if(request.status === 200) {
-				var classes = document.getElementById("day-focused").classList;
+				var focused = document.getElementById("day-focused");
+				if(focused === null) {
+					var today = document.getElementsByClassName("day-box")[0];
+					today.id = "day-focused";
+					focused = today;
+				}
+
+				var classes = focused.classList;
 				for(var i = 0; i < classes.length; i++) {
 					var cls = classes[i];
 					if(cls !== "day-box") {
