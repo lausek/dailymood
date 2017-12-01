@@ -28,7 +28,7 @@ class User {
         	$stmt = DataActor::get()->prepare("SELECT id FROM users WHERE name = ? AND password = SHA1(CONCAT(?, users.salt, ?))");
         	$stmt->bindValue(1, $_POST["username"]);
         	$stmt->bindValue(2, $_POST["password"]);
-        	$stmt->bindValue(3, Config::get("pepper"));
+        	$stmt->bindValue(3, Config::getImportant("pepper"));
         	
         	if(!$stmt->execute() || $stmt->rowCount() === 0) {
         		http_response_code(401);
