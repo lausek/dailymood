@@ -1,3 +1,4 @@
 .project
 .buildpath
 org.eclipse.php.core.prefs
+site/conf/service.yaml
