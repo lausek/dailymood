@@ -1,11 +1,31 @@
 (function () {
 	
-	var SERVICE_SET_DAY = "/background/set_day.php";
-	var chosen_date = get_date();
+	const SERVICE_GET_TIMELINE = "/background/get_timeline.php";
+	const SERVICE_GET_MOODS = "/background/get_moods.php";
+	const SERVICE_SET_DAY = "/background/set_day.php";
+	
+	let timeline = [];
+	let chosen_date = get_date();
+	
+	class DayBox {
+		
+		constructor(dayinfo) {
+			this.day = dayinfo.day;
+			this.mood = dayinfo.mood;
+			
+			this.node = document.createElement("div");
+			this.node.className = "day-box"
+		}
+		
+		set_mood(m) {
+			this.mood = m;
+		}
+		
+	}
 	
 	function join_params(obj) {
-		var str = "";
-		var i = 0;
+		let str = "";
+		let i = 0;
 		for(var key in obj) {
 			str += (i?"&":"") + key+"="+encodeURI(obj[key]);
 			i++;
@@ -103,18 +123,36 @@
 
 	document.addEventListener('DOMContentLoaded', function() {
 		
-		change_displayed_date();
+		let week = document.getElementById("last-week");
+		let month = document.getElementById("last-month");
 		
-		document.getElementById("last-week").addEventListener('click', function(event) {
+		call_service(SERVICE_GET_TIMELINE, function(request) {
+			if(request.status === 200) {
+				let i = 1;
+				for(let day of JSON.parse(request.response)) {
+					let daynode = new DayBox(day);
+					
+					timeline.push(daynode);
+					if(i <= 7) {
+						week.appendChild(daynode.node);
+					}
+					month.appendChild(daynode.node);
+					
+					i++;
+				}
+			}
+		});
+		
+		/* TODO: wait until data was retrieved */
+		for(let button of document.getElementsByClassName("choose-button")) {
+			button.addEventListener('click', choose_callback);
+		}
+		
+		week.addEventListener('click', event => {
 			if(event.target.className.includes("day-box")) {
 				change_date(event.target);			
 			}
 		});
-
-		var buttons = document.getElementsByClassName("choose-button");
-		for(var i = 0; i < buttons.length; i++) {
-			buttons[i].addEventListener('click', choose_callback);
-		}
 		
 	});
 	

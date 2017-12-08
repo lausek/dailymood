@@ -54,24 +54,16 @@ class DataActor {
 			
 			$expected = (new DateTime)->sub(new DateInterval("P".($i-1)."D"));
 			
-// 			echo "LastDate: ".$lastDate->format("Y-m-d")." Expected:".$expected->format("Y-m-d")."<br>";
-// 			echo var_dump($lastDate == $expected);
-			
 			if($lastDate === null
 			|| $lastDate->format("Y-m-d") != $expected->format("Y-m-d")) {
-				$days[$i] = ["day" => $expected->format("Y-m-d")];
+				$days[] = ["day" => $expected->format("Y-m-d")];
 			}else{
-				$days[$i] = $row;
+				$days[] = $row;
 				$row = $stmt->fetch(PDO::FETCH_ASSOC);
 				$lastDate = $row !== false ? new DateTime($row["day"]) : null;
 			}
 			
 		}
-		
-// 		echo '<pre>';
-// 		echo var_dump($days);
-// 		echo '</pre>';
-// 		exit;
 		
 		return $days;
 		
