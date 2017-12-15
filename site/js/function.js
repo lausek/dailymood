@@ -4,8 +4,8 @@
 	const SERVICE_GET_MOODS = '/background/get_moods.php';
 	const SERVICE_SET_DAY = '/background/set_day.php';
 	
-	const week  = () => document.getElementById('last-week');
-	const month = () => document.getElementById('last-month');
+	const week  = () => document.getElementById('last-week-boxes');
+	const month = () => document.getElementById('last-month-boxes');
 	const get_day = (obj, n) => obj.getElementsByClassName('day-box')[n];
 	
 	const moods = (() => {
@@ -70,30 +70,43 @@
 	
 		/* recursively get button element */
 		const button = (function that(node) {
-			return node.className.includes("choose-button") ? node : that(node.parentElement);
+			return node.className.includes('choose-button') ? node : that(node.parentElement);
 		}(evt.target));
 
 		const params = {
 			ondate: format_date(chosen_date),
-			mood: button.getElementsByClassName("choose-text")[0].innerHTML,
+			mood: button.getElementsByClassName('choose-text')[0].innerHTML,
 		}; 
 
 		call_service(SERVICE_SET_DAY, params)
 			.then(request => {
-				const focused = document.getElementById("day-focused");
+				let focused = document.getElementById('day-focused');
 				if(focused === null) {
-					const today = document.getElementsByClassName("day-box")[0];
-					today.id = "day-focused";
+					const today = get_day(week(), 0);
+					today.id = 'day-focused';
 					focused = today;
 				}
-
-				const classes = focused.classList;
-				classes.forEach(cls => {
-					if(cls !== "day-box") {
-						classes.remove(cls);
+				
+				const change_mood = node => {
+					const classes = node.classList;
+					classes.forEach(cls => {
+						if(cls !== 'day-box') {
+							classes.remove(cls);
+						}
+					});
+					classes.add('day-mood-'+params.mood);
+				};
+				
+				change_mood(focused);
+				
+				let i = 0;
+				for(let node of focused.parentElement.children) {
+					if(node == focused) {
+						change_mood(get_day(month(), i));
+						break;
 					}
-				});
-				classes.add("day-mood-"+params.mood);
+					i += 1;
+				}				
 			});
 
 	}
@@ -106,30 +119,30 @@
 
 	function change_displayed_date() {
 	
-		var token = "today";
+		var token = 'today';
 
 		/* is selected date not today? */
 		if(chosen_date.valueOf() !== get_date().valueOf()) {
-			token = "on "+format_date(chosen_date);
+			token = 'on '+format_date(chosen_date);
 		}
 		
-		document.getElementById("choose-day").innerHTML = token;
+		document.getElementById('choose-day').innerHTML = token;
 
 	}
 
 	function change_date(node) {
 		
-		const info_node = node.getElementsByClassName("day-info")[0];
+		const info_node = node.getElementsByClassName('day-info')[0];
 		const info = JSON.parse(info_node.innerHTML);
 	
 		if(info.mood !== -1) {
 		}
 		
-		const previous = document.getElementById("day-focused");
+		const previous = document.getElementById('day-focused');
 		if(previous) {
-			previous.id = "";
+			previous.id = '';
 		}
-		node.id = "day-focused";
+		node.id = 'day-focused';
 
 		chosen_date = get_date(info.date);
 		change_displayed_date();	
