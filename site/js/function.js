@@ -1,13 +1,45 @@
 (function () {
 	
-	var SERVICE_SET_DAY = "/background/set_day.php";
-	var chosen_date = get_date();
+	const SERVICE_GET_TIMELINE = '/background/get_timeline.php';
+	const SERVICE_GET_MOODS = '/background/get_moods.php';
+	const SERVICE_SET_DAY = '/background/set_day.php';
+	
+	const week  = () => document.getElementById('last-week-boxes');
+	const month = () => document.getElementById('last-month-boxes');
+	const get_day = (obj, n) => obj.getElementsByClassName('day-box')[n];
+	
+	const moods = (() => {
+		let m = [];
+		call_service(SERVICE_GET_MOODS)
+			.then(request => {
+				let i = 1;
+				JSON.parse(request.response).forEach(node => {
+					m[i] = node;
+					i += 1;
+				});
+				/* TODO: will fail if DOM isn't loaded */
+				initialize_buttons(m);
+			});
+		return m;
+	})();
+
+	let chosen_date = get_date();
+	
+	const new_day = (day => {
+		const node = document.createElement('div');
+		node.className = 'day-box';
+		if(day.mood) {
+			node.className += ' day-mood-'+moods[day.mood].name;
+		}
+		node.innerHTML = '<span class="day-info" hidden>{ "date": "'+day.day+'", "mood": "'+(day.mood ? day.mood : -1)+'" }</span>';
+		return node;
+	});
 	
 	function join_params(obj) {
-		var str = "";
-		var i = 0;
-		for(var key in obj) {
-			str += (i?"&":"") + key+"="+encodeURI(obj[key]);
+		let str = "";
+		let i = 0;
+		for(let key in obj) {
+			str += (i?"&":"") + encodeURI(key)+"="+encodeURI(obj[key]);
 			i++;
 		}
 		return str;
@@ -17,104 +49,144 @@
 		return new Date(date.getTime() - (date.getTimezoneOffset()*60000)).toISOString().split('T')[0];
 	}
 
-	function call_service(url, callback, body) {
-		var request = new XMLHttpRequest();
-		request.open('POST', url, true);
-		
-		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	function call_service(url, body) {
+		return new Promise((resolve, reject) => {
+			const request = new XMLHttpRequest();
+			request.open('POST', url, true);
+			
+			request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-		request.addEventListener('load', function() {
-			callback(request);
+			request.addEventListener('load', () => {
+				if(request.status === 200) {
+					resolve(request);
+				} else {
+					reject(request);
+				}
+			});
+			request.send(join_params(body));
 		});
-		request.send(join_params(body));
 	}
 	
 	function choose_callback(evt) {
 	
 		/* recursively get button element */
-		var button = (function that(node) {
-			return node.className.includes("choose-button") ? node : that(node.parentElement);
+		const button = (function that(node) {
+			return node.className.includes('choose-button') ? node : that(node.parentElement);
 		}(evt.target));
 
-		var params = {
+		const params = {
 			ondate: format_date(chosen_date),
-			mood: button.getElementsByClassName("choose-text")[0].innerHTML,
+			mood: button.getElementsByClassName('choose-text')[0].innerHTML,
 		}; 
 
-		call_service(SERVICE_SET_DAY, function(request) {
-			if(request.status === 200) {
-				var focused = document.getElementById("day-focused");
+		call_service(SERVICE_SET_DAY, params)
+			.then(request => {
+				let focused = document.getElementById('day-focused');
 				if(focused === null) {
-					var today = document.getElementsByClassName("day-box")[0];
-					today.id = "day-focused";
+					const today = get_day(week(), 0);
+					today.id = 'day-focused';
 					focused = today;
 				}
-
-				var classes = focused.classList;
-				for(var i = 0; i < classes.length; i++) {
-					var cls = classes[i];
-					if(cls !== "day-box") {
-						classes.remove(cls);
+				
+				const change_mood = node => {
+					const classes = node.classList;
+					classes.forEach(cls => {
+						if(cls !== 'day-box') {
+							classes.remove(cls);
+						}
+					});
+					classes.add('day-mood-'+params.mood);
+				};
+				
+				change_mood(focused);
+				
+				let i = 0;
+				for(let node of focused.parentElement.children) {
+					if(node == focused) {
+						change_mood(get_day(month(), i));
+						break;
 					}
-				}
-				classes.add("day-mood-"+params.mood);
-			}
-		}, params);
+					i += 1;
+				}				
+			});
 
 	}
 	
 	function get_date(str) {
-		var obj = str === undefined ? new Date() : new Date(str);
+		const obj = str === undefined ? new Date() : new Date(str);
 		obj.setHours(0, 0, 0, 0);
 		return obj;	
 	}
 
 	function change_displayed_date() {
 	
-		var token = "today";
+		let token = 'today';
 
 		/* is selected date not today? */
 		if(chosen_date.valueOf() !== get_date().valueOf()) {
-			token = "on "+format_date(chosen_date);
+			token = 'on '+format_date(chosen_date);
 		}
 		
-		document.getElementById("choose-day").innerHTML = token;
+		document.getElementById('choose-day').innerHTML = token;
 
 	}
 
 	function change_date(node) {
 		
-		var info_node = node.getElementsByClassName("day-info")[0];
-		var info = JSON.parse(info_node.innerHTML);
+		const info_node = node.getElementsByClassName('day-info')[0];
+		const info = JSON.parse(info_node.innerHTML);
 	
 		if(info.mood !== -1) {
+			
 		}
 		
-		var previous = document.getElementById("day-focused");
+		const previous = document.getElementById('day-focused');
 		if(previous) {
-			previous.id = "";
+			previous.id = '';
 		}
-		node.id = "day-focused";
+		
+		node.id = 'day-focused';
 
 		chosen_date = get_date(info.date);
 		change_displayed_date();	
 
 	}
-
-	document.addEventListener('DOMContentLoaded', function() {
+	
+	function initialize_buttons(moods) {
+		const buttons = document.getElementById('choose-buttons');
+		moods.forEach(mood => {
+			const node = document.createElement('div');
+			node.id = 'choose-'+mood.name;
+			node.className = 'choose-button';
+			node.innerHTML = "<div class='choose-icon'>&#"+mood.icon+";</div>"
+								+ "<div class='choose-text'>"+mood.name+"</div>";
+			node.addEventListener('click', choose_callback);
+			buttons.appendChild(node);
+		});
+	}
+	
+	document.addEventListener('DOMContentLoaded', () => {
 		
-		change_displayed_date();
+		const ref_week  = week();
+		const ref_month = month();
 		
-		document.getElementById("last-week").addEventListener('click', function(event) {
-			if(event.target.className.includes("day-box")) {
+		call_service(SERVICE_GET_TIMELINE)
+			.then(function(request) {
+				let i = 1;
+				JSON.parse(request.response).forEach(day => {
+					if(i <= 7) {
+						ref_week.appendChild(new_day(day));
+					}
+					ref_month.appendChild(new_day(day));
+					i += 1;
+				});
+			});
+		
+		ref_week.addEventListener('click', event => {
+			if(event.target.className.includes('day-box')) {
 				change_date(event.target);			
 			}
 		});
-
-		var buttons = document.getElementsByClassName("choose-button");
-		for(var i = 0; i < buttons.length; i++) {
-			buttons[i].addEventListener('click', choose_callback);
-		}
 		
 	});
 	

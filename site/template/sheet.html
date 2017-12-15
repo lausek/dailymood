@@ -24,7 +24,7 @@
 	<main>
 	
 		<menu>
-            		<a href="/background/logout.php"><img src="/img/logout.png" class="toolbar-button" /></a>
+           	<a href="/background/logout.php"><img src="/img/logout.png" class="toolbar-button" /></a>
 		</menu>
 		
 		<div id="choose-section" class="box block"> 
@@ -41,12 +41,14 @@
 		
 		<div id="last-week" class="box block">
 			<h1>Last 7 days...</h1>
-			{{ _self.print_days(vars.days, vars.moods, 7) }}
+			<div id="last-week-boxes"></div>
+			{# {{ _self.print_days(vars.days, vars.moods, 7) }} #}
 		</div>
 		
 		<div id="last-month" class="box block">
 			<h1>Last 30 days...</h1>
-			{{ _self.print_days(vars.days, vars.moods, 30) }}
+			<div id="last-month-boxes"></div>
+			{# {{ _self.print_days(vars.days, vars.moods, 30) }} #}
 		</div>
 		
 	</main>
