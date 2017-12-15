@@ -51,7 +51,6 @@ if($user === null) {
 
 		//TODO: test affected rows
 
-
 	} catch(Exception $e) {
 		
 		http_response_code(400);
