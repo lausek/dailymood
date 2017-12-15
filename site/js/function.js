@@ -37,7 +37,7 @@
 	function join_params(obj) {
 		let str = "";
 		let i = 0;
-		for(var key in obj) {
+		for(let key in obj) {
 			str += (i?"&":"") + key+"="+encodeURI(obj[key]);
 			i++;
 		}
@@ -112,14 +112,14 @@
 	}
 	
 	function get_date(str) {
-		var obj = str === undefined ? new Date() : new Date(str);
+		const obj = str === undefined ? new Date() : new Date(str);
 		obj.setHours(0, 0, 0, 0);
 		return obj;	
 	}
 
 	function change_displayed_date() {
 	
-		var token = 'today';
+		let token = 'today';
 
 		/* is selected date not today? */
 		if(chosen_date.valueOf() !== get_date().valueOf()) {
@@ -136,12 +136,14 @@
 		const info = JSON.parse(info_node.innerHTML);
 	
 		if(info.mood !== -1) {
+			
 		}
 		
 		const previous = document.getElementById('day-focused');
 		if(previous) {
 			previous.id = '';
 		}
+		
 		node.id = 'day-focused';
 
 		chosen_date = get_date(info.date);
