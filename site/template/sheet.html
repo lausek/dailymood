@@ -5,20 +5,6 @@
 	<script src="js/function.js"></script>
 {% endblock %}
 
-{% macro print_days(days, moods, amount) %}
-	{% for i in 1..amount %}
-		{% set mood = days[i].mood-1 %}
-		{% if moods[mood] %}
-			<div class="day-box day-mood-{{ moods[mood].name }}">
-		{% else %}
-			<div class="day-box">
-		{% endif %}		
-
-			<span class="day-info" hidden>{ "date": "{{ days[i].day }}", "mood": "{{ mood }}" }</span>
-		</div>
-	{% endfor %}
-{% endmacro %}
-
 {% block main %}
 
 	<main>
@@ -29,26 +15,17 @@
 		
 		<div id="choose-section" class="box block"> 
 			<h1>How did you feel <span id="choose-day">today</span>?</h1>
-			<div id="choose-buttons">
-				{% for mood in vars.moods %}
-					<div id="choose-{{ mood.name }}" class="choose-button">
-						<div class="choose-icon">&#{{ mood.icon }};</div>
-						<div class="choose-text">{{ mood.name }}</div>
-					</div>
-				{% endfor %}
-			</div> 
+			<div id="choose-buttons"><div class="loading"></div></div> 
 		</div> 
 		
 		<div id="last-week" class="box block">
 			<h1>Last 7 days...</h1>
-			<div id="last-week-boxes"></div>
-			{# {{ _self.print_days(vars.days, vars.moods, 7) }} #}
+			<div id="last-week-boxes"><div class="loading"></div></div>
 		</div>
 		
 		<div id="last-month" class="box block">
 			<h1>Last 30 days...</h1>
-			<div id="last-month-boxes"></div>
-			{# {{ _self.print_days(vars.days, vars.moods, 30) }} #}
+			<div id="last-month-boxes"><div class="loading"></div></div>
 		</div>
 		
 	</main>

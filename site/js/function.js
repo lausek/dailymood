@@ -35,6 +35,12 @@
 		return node;
 	});
 	
+	function clear_loading(node) {
+		for(let loading_node of node.getElementsByClassName('loading')) {
+			node.removeChild(loading_node);
+		}
+	}
+	
 	function join_params(obj) {
 		let str = "";
 		let i = 0;
@@ -163,6 +169,7 @@
 			node.addEventListener('click', choose_callback);
 			buttons.appendChild(node);
 		});
+		clear_loading(buttons);
 	}
 	
 	document.addEventListener('DOMContentLoaded', () => {
@@ -180,6 +187,8 @@
 					ref_month.appendChild(new_day(day));
 					i += 1;
 				});
+				clear_loading(ref_week);
+				clear_loading(ref_month);
 			});
 		
 		ref_week.addEventListener('click', event => {

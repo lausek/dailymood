@@ -63,3 +63,11 @@ input {
 	padding: 5px;
 	margin-right: 10px;
 }
+
+.loading {
+	margin: auto;
+	width: 64px;
+	height: 64px;
+	background: url("/img/loading.gif");
+	background-repeat: no-repeat;
+}
