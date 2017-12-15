@@ -11,12 +11,13 @@
 	const moods = (() => {
 		let m = [];
 		call_service(SERVICE_GET_MOODS)
-			.then((request) => {
+			.then(request => {
 				let i = 1;
 				JSON.parse(request.response).forEach(node => {
 					m[i] = node;
 					i += 1;
 				});
+				/* TODO: will fail if DOM isn't loaded */
 				initialize_buttons(m);
 			});
 		return m;
@@ -24,7 +25,7 @@
 
 	let chosen_date = get_date();
 	
-	const new_day = ((day) => {
+	const new_day = (day => {
 		const node = document.createElement('div');
 		node.className = 'day-box';
 		if(day.mood) {
@@ -38,7 +39,7 @@
 		let str = "";
 		let i = 0;
 		for(let key in obj) {
-			str += (i?"&":"") + key+"="+encodeURI(obj[key]);
+			str += (i?"&":"") + encodeURI(key)+"="+encodeURI(obj[key]);
 			i++;
 		}
 		return str;
