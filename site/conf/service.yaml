@@ -3,6 +3,7 @@
 pepper: "5!yLZ;d:d"
 
 # Connection to mysql database
+# Note: 'unix_socket' will take advantage over 'host'
 database:
         name: "dailymood"
         user: "dailymood"
