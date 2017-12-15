@@ -1,27 +1,38 @@
 (function () {
 	
-	const SERVICE_GET_TIMELINE = "/background/get_timeline.php";
-	const SERVICE_GET_MOODS = "/background/get_moods.php";
-	const SERVICE_SET_DAY = "/background/set_day.php";
+	const SERVICE_GET_TIMELINE = '/background/get_timeline.php';
+	const SERVICE_GET_MOODS = '/background/get_moods.php';
+	const SERVICE_SET_DAY = '/background/set_day.php';
 	
-	let timeline = [];
+	const week  = () => document.getElementById('last-week');
+	const month = () => document.getElementById('last-month');
+	const get_day = (obj, n) => obj.getElementsByClassName('day-box')[n];
+	
+	const moods = (() => {
+		let m = [];
+		call_service(SERVICE_GET_MOODS)
+			.then((request) => {
+				let i = 1;
+				for(let node of JSON.parse(request.response)) {
+					m[i] = node;
+					i += 1;
+				}
+				initialize_buttons(m);
+			});
+		return m;
+	})();
+
 	let chosen_date = get_date();
 	
-	class DayBox {
-		
-		constructor(dayinfo) {
-			this.day = dayinfo.day;
-			this.mood = dayinfo.mood;
-			
-			this.node = document.createElement("div");
-			this.node.className = "day-box"
+	const new_day = ((day) => {
+		let node = document.createElement('div');
+		node.className = 'day-box';
+		if(mood) {
+			node.className += ' day-mood-'+moods[mood].name;
 		}
-		
-		set_mood(m) {
-			this.mood = m;
-		}
-		
-	}
+		node.innerHTML = "<span class='day-info' hidden>{ 'date': '"+day.date+"', 'mood': '"+day.mood+"' }</span>";
+		return node;
+	});
 	
 	function join_params(obj) {
 		let str = "";
@@ -37,16 +48,22 @@
 		return new Date(date.getTime() - (date.getTimezoneOffset()*60000)).toISOString().split('T')[0];
 	}
 
-	function call_service(url, callback, body) {
-		var request = new XMLHttpRequest();
-		request.open('POST', url, true);
-		
-		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	function call_service(url, body) {
+		return new Promise((resolve, reject) => {
+			let request = new XMLHttpRequest();
+			request.open('POST', url, true);
+			
+			request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
-		request.addEventListener('load', function() {
-			callback(request);
+			request.addEventListener('load', () => {
+				if(request.status === 200) {
+					resolve(request);
+				} else {
+					reject(request);
+				}
+			});
+			request.send(join_params(body));
 		});
-		request.send(join_params(body));
 	}
 	
 	function choose_callback(evt) {
@@ -61,8 +78,8 @@
 			mood: button.getElementsByClassName("choose-text")[0].innerHTML,
 		}; 
 
-		call_service(SERVICE_SET_DAY, function(request) {
-			if(request.status === 200) {
+		call_service(SERVICE_SET_DAY, params)
+			.then(function(request) {
 				var focused = document.getElementById("day-focused");
 				if(focused === null) {
 					var today = document.getElementsByClassName("day-box")[0];
@@ -78,8 +95,7 @@
 					}
 				}
 				classes.add("day-mood-"+params.mood);
-			}
-		}, params);
+			});
 
 	}
 	
@@ -120,36 +136,39 @@
 		change_displayed_date();	
 
 	}
-
-	document.addEventListener('DOMContentLoaded', function() {
-		
-		let week = document.getElementById("last-week");
-		let month = document.getElementById("last-month");
-		
-		call_service(SERVICE_GET_TIMELINE, function(request) {
-			if(request.status === 200) {
-				let i = 1;
-				for(let day of JSON.parse(request.response)) {
-					let daynode = new DayBox(day);
-					
-					timeline.push(daynode);
-					if(i <= 7) {
-						week.appendChild(daynode.node);
-					}
-					month.appendChild(daynode.node);
-					
-					i++;
-				}
-			}
+	
+	function initialize_buttons(moods) {
+		const buttons = document.getElementById('choose-buttons');
+		moods.forEach(mood => {
+			const node = document.createElement('div');
+			node.id = 'choose-'+mood.name;
+			node.className = 'choose-button';
+			node.innerHTML = "<div class='choose-icon'>&#"+mood.icon+";</div>"
+								+ "<div class='choose-text'>"+mood.name+"</div>";
+			node.addEventListener('click', choose_callback);
+			buttons.appendChild(node);
 		});
+	}
+	
+	document.addEventListener('DOMContentLoaded', () => {
 		
-		/* TODO: wait until data was retrieved */
-		for(let button of document.getElementsByClassName("choose-button")) {
-			button.addEventListener('click', choose_callback);
-		}
+		const ref_week  = week();
+		const ref_month = month();
 		
-		week.addEventListener('click', event => {
-			if(event.target.className.includes("day-box")) {
+		call_service(SERVICE_GET_TIMELINE)
+			.then(function(request) {
+				let i = 1;
+				JSON.parse(request.response).forEach(day => {
+					if(i <= 7) {
+						ref_week.appendChild(new_day(day));
+					}
+					ref_month.appendChild(new_day(day));
+					i += 1;
+				});
+			});
+		
+		ref_week.addEventListener('click', event => {
+			if(event.target.className.includes('day-box')) {
 				change_date(event.target);			
 			}
 		});
