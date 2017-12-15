@@ -21,13 +21,13 @@ class DataActor {
 	
 	public static function get_moods() {
 		
-		$stmt = self::get()->prepare("SELECT name, icon FROM moods");
+		$stmt = self::get()->prepare("SELECT * FROM moods");
 		
 		if(!$stmt->execute()) {
-			return [];
+			throw new Exception("error in sql");
 		}
 		
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
 	}
 	
