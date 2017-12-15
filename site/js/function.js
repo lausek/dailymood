@@ -13,10 +13,10 @@
 		call_service(SERVICE_GET_MOODS)
 			.then((request) => {
 				let i = 1;
-				for(let node of JSON.parse(request.response)) {
+				JSON.parse(request.response).forEach(node => {
 					m[i] = node;
 					i += 1;
-				}
+				});
 				initialize_buttons(m);
 			});
 		return m;
@@ -25,12 +25,12 @@
 	let chosen_date = get_date();
 	
 	const new_day = ((day) => {
-		let node = document.createElement('div');
+		const node = document.createElement('div');
 		node.className = 'day-box';
-		if(mood) {
-			node.className += ' day-mood-'+moods[mood].name;
+		if(day.mood) {
+			node.className += ' day-mood-'+moods[day.mood].name;
 		}
-		node.innerHTML = "<span class='day-info' hidden>{ 'date': '"+day.date+"', 'mood': '"+day.mood+"' }</span>";
+		node.innerHTML = '<span class="day-info" hidden>{ "date": "'+day.day+'", "mood": "'+(day.mood ? day.mood : -1)+'" }</span>';
 		return node;
 	});
 	
@@ -50,7 +50,7 @@
 
 	function call_service(url, body) {
 		return new Promise((resolve, reject) => {
-			let request = new XMLHttpRequest();
+			const request = new XMLHttpRequest();
 			request.open('POST', url, true);
 			
 			request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -69,31 +69,30 @@
 	function choose_callback(evt) {
 	
 		/* recursively get button element */
-		var button = (function that(node) {
+		const button = (function that(node) {
 			return node.className.includes("choose-button") ? node : that(node.parentElement);
 		}(evt.target));
 
-		var params = {
+		const params = {
 			ondate: format_date(chosen_date),
 			mood: button.getElementsByClassName("choose-text")[0].innerHTML,
 		}; 
 
 		call_service(SERVICE_SET_DAY, params)
-			.then(function(request) {
-				var focused = document.getElementById("day-focused");
+			.then(request => {
+				const focused = document.getElementById("day-focused");
 				if(focused === null) {
-					var today = document.getElementsByClassName("day-box")[0];
+					const today = document.getElementsByClassName("day-box")[0];
 					today.id = "day-focused";
 					focused = today;
 				}
 
-				var classes = focused.classList;
-				for(var i = 0; i < classes.length; i++) {
-					var cls = classes[i];
+				const classes = focused.classList;
+				classes.forEach(cls => {
 					if(cls !== "day-box") {
 						classes.remove(cls);
 					}
-				}
+				});
 				classes.add("day-mood-"+params.mood);
 			});
 
@@ -120,13 +119,13 @@
 
 	function change_date(node) {
 		
-		var info_node = node.getElementsByClassName("day-info")[0];
-		var info = JSON.parse(info_node.innerHTML);
+		const info_node = node.getElementsByClassName("day-info")[0];
+		const info = JSON.parse(info_node.innerHTML);
 	
 		if(info.mood !== -1) {
 		}
 		
-		var previous = document.getElementById("day-focused");
+		const previous = document.getElementById("day-focused");
 		if(previous) {
 			previous.id = "";
 		}
