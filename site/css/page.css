@@ -78,6 +78,14 @@ input {
 	margin-right: 10px;
 }
 
+.choose-button:hover {
+    background-color: #f5f5f5;
+}
+
+.choose-button:active {
+    background-color: #e8e8e8;
+} 
+
 .loading {
 	margin: auto;
 	width: 64px;
