@@ -7,6 +7,7 @@ class DataActor {
 	private static $pdo = null;
 	
 	public static function get() {
+
 		if(self::$pdo === null) {
 			$dbconf = Config::getImportant("database");
 			if(isset($dbconf["unix_socket"])) {
@@ -15,7 +16,9 @@ class DataActor {
 			} else {
 				self::$pdo = new PDO("mysql:dbname=".$dbconf["name"].";host=".$dbconf["host"], $dbconf["user"], $dbconf["password"]);
 			}
+			assert(self::$pdo !== null);
 		}
+		
 		return self::$pdo;
 	}
 	
@@ -28,7 +31,6 @@ class DataActor {
 		}
 		
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
-		
 	}
 	
 	public static function get_days($user) {
@@ -66,7 +68,6 @@ class DataActor {
 		}
 		
 		return $days;
-		
 	}
 	
 }

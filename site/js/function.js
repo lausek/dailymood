@@ -44,6 +44,10 @@
         return node;
     };
     
+    function panic(err) {
+        alert(err.responseText);
+    }
+
     function get_focused_day() {
         let focused = document.getElementById('day-focused');
         if(focused === null) {
@@ -111,29 +115,33 @@
         }
 
         call_service(SERVICE_SET_DAY, 'POST', params)
-            .then(request => {  
-                const change_mood = node => {
-                    const classes = node.classList;
-                    classes.forEach(cls => {
-                        if(cls !== 'day-box') {
-                            classes.remove(cls);
+            .then(
+                request => {  
+                    const change_mood = node => {
+                        const classes = node.classList;
+                        classes.forEach(cls => {
+                            if(cls !== 'day-box') {
+                                classes.remove(cls);
+                            }
+                        });
+                        classes.add(`day-mood-${params.mood}`);
+                    };
+                    const focused = get_focused_day();
+                    
+                    change_mood(focused);
+                    
+                    let i = 0;
+                    for(let node of focused.parentElement.children) {
+                        if(node == focused) {
+                            change_mood(get_day(month(), i));
+                            break;
                         }
-                    });
-                    classes.add(`day-mood-${params.mood}`);
-                };
-                const focused = get_focused_day();
-                
-                change_mood(focused);
-                
-                let i = 0;
-                for(let node of focused.parentElement.children) {
-                    if(node == focused) {
-                        change_mood(get_day(month(), i));
-                        break;
-                    }
-                    i += 1;
-                }               
-            });
+                        i += 1;
+                    }               
+                },
+                panic
+            )
+            .catch(panic);
 
     }
 

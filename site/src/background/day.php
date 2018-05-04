@@ -1,6 +1,7 @@
 <?php
 
 require("../class/Autoloader.php");
+require("__common.php");
 
 $user = User::load_or_die();
 
@@ -10,17 +11,13 @@ if(!isset($_POST["ondate"]) || !isset($_POST["mood"])) {
 	exit;	
 }
 
-switch ($_SERVER['REQUEST_METHOD']) {
-    case 'POST':
-   		write();
-        break;
+handle([
+	'POST' => function() use ($user) {
+		return write($user);
+	}
+]);
 
-    default:
-        http_response_code(400);
-        break;
-}
-
-function write() {
+function write($user) {
 
 	try {
 		
@@ -47,19 +44,16 @@ function write() {
 		$changeQuery->bindValue(":n", isset($_POST["note"]) ? $_POST["note"] : null);	
 
 		if($changeQuery->execute()) {
-			http_response_code(200);
+			return 200;
 		} else {
-			foreach($changeQuery->errorInfo() as $msg) {
-				echo $msg."\n";
-			}	
-			http_response_code(400);
+			throw new Exception(implode("\n", $changeQuery->errorInfo()));
 		}
 
 		//TODO: test affected rows
 
 	} catch(Exception $e) {
 		
-		http_response_code(400);
-
+		echo $e->getMessage();
+		return 400;
 	}
 }
