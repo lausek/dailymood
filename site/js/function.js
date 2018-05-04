@@ -201,6 +201,9 @@
                 });
                 clear_loading(ref_week);
                 clear_loading(ref_month);
+
+                let first = document.getElementById("last-week-boxes").children[0];
+                change_date(first);
             });
         
         ref_week.addEventListener('click', event => {

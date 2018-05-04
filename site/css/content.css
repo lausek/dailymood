@@ -7,6 +7,10 @@
 	margin-right: 5px;
 }
 
+#day-focused {
+	border: 2px solid black;
+}
+
 /* Thanks to: http://www.color-hex.com/color-palette/49772 */
 
 .day-mood-sad {
