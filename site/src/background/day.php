@@ -2,20 +2,26 @@
 
 require("../class/Autoloader.php");
 
-$user = User::load();
-
-// not logged in
-if($user === null) {
-	
-	http_response_code(401);
+$user = User::load_or_die();
 
 // missing arguments
-} elseif(!isset($_POST["ondate"]) || !isset($_POST["mood"])) {
-	
+if(!isset($_POST["ondate"]) || !isset($_POST["mood"])) {
 	http_response_code(400);
-	
-} else {
-	
+	exit;	
+}
+
+switch ($_SERVER['REQUEST_METHOD']) {
+    case 'POST':
+   		write();
+        break;
+
+    default:
+        http_response_code(400);
+        break;
+}
+
+function write() {
+
 	try {
 		
 		$writeDate = new DateTime($_POST["ondate"]);
@@ -30,7 +36,7 @@ if($user === null) {
 		$stmt->bindValue(2, $_POST["ondate"]);
 
 		$stmt->execute();
-	
+
 		$changeQuery = DataActor::get()->prepare(0 === $stmt->rowCount()
 							? "INSERT INTO days (day, user, mood, note) VALUES (:d, :u, (SELECT id FROM moods WHERE name = :m), :n)" 
 							: "UPDATE days SET mood = (SELECT id FROM moods WHERE name = :m), note = :n WHERE day = :d AND user = :u");
@@ -56,5 +62,4 @@ if($user === null) {
 		http_response_code(400);
 
 	}
-	
 }
