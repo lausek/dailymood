@@ -15,6 +15,15 @@ class User {
 		return $this->id;
 	}
 	
+    public static function load_or_die() {
+        $user = User::load();
+        if ($user == null) {
+            http_response_code(401);
+            exit;
+        }
+        return $user;
+    }
+
     public static function load() {
 
         session_start();
