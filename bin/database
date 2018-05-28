@@ -1,0 +1,73 @@
+#!/bin/bash
+
+CONFIG_PATH="../site/conf/service.yaml"
+
+function create-config {
+
+    database=$(read -p "database: ")
+    if [[ "$?" -ne "0" ]]; then
+        return;
+    fi
+
+}
+
+function finish {
+    echo "Exiting..."
+    exit
+}
+
+function confirm {
+    read -p "$1 [Y/n]" yn
+    case $yn in
+        Y|y|J|j)
+            return 0;;
+        *)
+            return 1;;
+    esac
+}
+
+function yes { 
+    echo -e "\e[32mYes\e[0m"; 
+}
+
+function no { 
+    echo -e "\e[31mNo\e[0m"; 
+}
+
+case $1 in
+    "init")
+
+        echo "Initializing database..."
+
+        # TODO: read config.yaml or generate if not exists
+        echo -n "Config found?... "
+        if [[ -r $CONFIG_PATH ]]; then
+            yes
+        else
+            no
+
+            confirm "Create a config file?"
+            if [[ "$?" -eq "0" ]]; then 
+                # TODO: create config
+                echo "Creating config file"
+                create-config
+
+            else
+                echo "No config file created." 
+                finish
+            fi
+
+        fi
+
+        # TODO: check if connection works
+
+        # TODO: check if objects can be created
+
+        ;;
+
+    *)
+        echo "No action specified."
+        ;;
+esac
+
+finish
